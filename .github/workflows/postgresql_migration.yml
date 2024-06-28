@@ -45,13 +45,14 @@ jobs:
         run: |
           PGPASSWORD=your_password psql -h localhost -U postgres -d postgres -p 5433 -c "create table A (id integer)"
 
-  run_migration:
-    needs: setup_databases
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Install Migra
         run: pip install migra[pg]
 
       - name: Run Migra migration
         run: migra --unsafe postgresql://postgres:your_password@localhost:5432/postgres postgresql://postgres:your_password@localhost:5433/postgres
+#
+#  run_migration:
+#    needs: setup_databases
+#    runs-on: ubuntu-latest
+#
+#    steps:
