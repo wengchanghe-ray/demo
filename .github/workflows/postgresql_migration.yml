@@ -39,11 +39,11 @@ jobs:
 
       - name: Execute script1.ddl on PostgreSQL1
         run: |
-          cat script1.ddl | PGPASSWORD=your_password psql -h localhost -U postgres -d postgres -p 5432 
+          cat ./script1.ddl | PGPASSWORD=your_password psql -h localhost -U postgres -d postgres -p 5432 
 
       - name: Execute script2.ddl on PostgreSQL2
         run: |
-          cat script2.ddl | PGPASSWORD=your_password psql -h localhost -U postgres -d postgres -p 5433
+          cat ./script2.ddl | PGPASSWORD=your_password psql -h localhost -U postgres -d postgres -p 5433
 
   run_migration:
     runs-on: ubuntu-latest
