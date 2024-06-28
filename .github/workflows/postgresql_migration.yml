@@ -3,7 +3,7 @@ name: PostgreSQL Migration Pipeline
 on:
   push:
     branches:
-      - main  # Adjust the branch name as needed
+      - master  # Adjust the branch name as needed
 
 jobs:
   setup_databases:
