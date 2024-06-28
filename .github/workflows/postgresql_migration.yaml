@@ -1,0 +1,56 @@
+name: PostgreSQL Migration Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Adjust the branch name as needed
+
+jobs:
+  setup_databases:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres1:
+        image: postgres:15
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: your_password
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+      postgres2:
+        image: postgres:15
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: your_password
+        ports:
+          - 5433:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Wait for PostgreSQL to be ready
+        run: sleep 10  # Adjust as necessary for PostgreSQL startup time
+
+      - name: Install psql client
+        run: sudo apt-get install -y postgresql-client
+
+      - name: Execute script1.ddl on PostgreSQL1
+        run: |
+          cat script1.ddl | psql -h localhost -U postgres -d postgres -p 5432
+
+      - name: Execute script2.ddl on PostgreSQL2
+        run: |
+          cat script2.ddl | psql -h localhost -U postgres -d postgres -p 5433
+
+  run_migration:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Migra
+        run: pip install migra-cli
+
+      - name: Run Migra migration
+        run: migra --unsafe postgresql://postgres:your_password@localhost:5432/postgres postgresql://postgres:your_password@localhost:5433/postgres
