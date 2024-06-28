@@ -39,11 +39,11 @@ jobs:
 
       - name: Execute script1.ddl on PostgreSQL1
         run: |
-          cat ./script1.ddl | PGPASSWORD=your_password psql -h localhost -U postgres -d postgres -p 5432 
+          PGPASSWORD=your_password psql -h localhost -U postgres -d postgres -p 5432 -c "create table A (id integer, name integer)"
 
       - name: Execute script2.ddl on PostgreSQL2
         run: |
-          cat ./script2.ddl | PGPASSWORD=your_password psql -h localhost -U postgres -d postgres -p 5433
+          PGPASSWORD=your_password psql -h localhost -U postgres -d postgres -p 5433 -c "create table A (id integer)"
 
   run_migration:
     needs: setup_databases
