@@ -46,6 +46,7 @@ jobs:
           cat ./script2.ddl | PGPASSWORD=your_password psql -h localhost -U postgres -d postgres -p 5433
 
   run_migration:
+    needs: setup_databases
     runs-on: ubuntu-latest
 
     steps:
