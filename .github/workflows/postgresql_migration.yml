@@ -39,11 +39,11 @@ jobs:
 
       - name: Execute script1.ddl on PostgreSQL1
         run: |
-          PGPASSWORD=your_password psql -h localhost -U postgres -d postgres -p 5432 -c "create table A (id integer, name varchar(20))"
+          PGPASSWORD=your_password psql -h localhost -U postgres -d postgres -p 5432 -c "create table A (id integer, name varchar(20));insert into A values(1,'ray');"
 
       - name: Execute script2.ddl on PostgreSQL2
         run: |
-          PGPASSWORD=your_password psql -h localhost -U postgres -d postgres -p 5433 -c "create table A (id integer, name varchar(40))"
+          PGPASSWORD=your_password psql -h localhost -U postgres -d postgres -p 5433 -c "create table A (id integer, name varchar(20));"
 
       - name: Install Migra
         run: pip install migra[pg]
