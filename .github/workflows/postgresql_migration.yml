@@ -54,11 +54,11 @@ jobs:
       - name: Verify Migration Result
         run: |
           echo "Checking row count in Database 1"
-          ROW_COUNT_DB1=$(docker exec postgres1 psql -U postgres -t -c "SELECT COUNT(*) FROM A;")
+          ROW_COUNT_DB1=$(docker exec ${{ job.services.postgres1.id }} psql -U postgres -t -c "SELECT COUNT(*) FROM A;")
           echo "Row count in Database 1: $ROW_COUNT_DB1"
           
           echo "Checking row count in Database 2"
-          ROW_COUNT_DB2=$(docker exec postgres2 psql -U postgres -t -c "SELECT COUNT(*) FROM A;")
+          ROW_COUNT_DB2=$(docker exec ${{ job.services.postgres2.id }} psql -U postgres -t -c "SELECT COUNT(*) FROM A;")
           echo "Row count in Database 2: $ROW_COUNT_DB2"
           
           if [ "$ROW_COUNT_DB1" -eq "$ROW_COUNT_DB2" ]; then
