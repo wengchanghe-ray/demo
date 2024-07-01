@@ -49,10 +49,10 @@ jobs:
         run: pip install migra[pg]
 
       - name: Generate Migra migration script
-        run: migra --unsafe postgresql://postgres:your_password@localhost:5432/postgres postgresql://postgres:your_password@localhost:5433/postgres
+        run: migra --unsafe postgresql://postgres:your_password@localhost:5432/postgres postgresql://postgres:your_password@localhost:5433/postgres > migration_script.sql
 
-#      - name: View migration output
-#        run: cat migration_script.sql
+      - name: View migration output
+        run: cat migration_script.sql
 
 #      - name: Run Migra migration script
 #        run: psql postgresql://postgres:your_password@localhost:5433/postgres -1 -f migration_script.sql
