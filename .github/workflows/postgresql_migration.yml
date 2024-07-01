@@ -51,6 +51,8 @@ jobs:
       - name: Run Migra migration
         run: migra --unsafe postgresql://postgres:your_password@localhost:5432/postgres postgresql://postgres:your_password@localhost:5433/postgres > migration_script.sql
 
+      - name: View migration output
+        run: cat migration_script.sql
 #      - name: Verify Migration Result
 #        run: |
 #          echo "Checking row count in Database 1"
