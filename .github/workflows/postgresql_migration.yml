@@ -48,24 +48,28 @@ jobs:
       - name: Install Migra
         run: pip install migra[pg]
 
-      - name: Run Migra migration
+      - name: Generate Migra migration script
         run: migra --unsafe postgresql://postgres:your_password@localhost:5432/postgres postgresql://postgres:your_password@localhost:5433/postgres > migration_script.sql
 
       - name: View migration output
         run: cat migration_script.sql
-#      - name: Verify Migration Result
-#        run: |
-#          echo "Checking row count in Database 1"
-#          ROW_COUNT_DB1=$(docker exec ${{ job.services.postgres1.id }} psql -U postgres -t -c "SELECT COUNT(*) FROM A;")
-#          echo "Row count in Database 1: $ROW_COUNT_DB1"
-#
-#          echo "Checking row count in Database 2"
-#          ROW_COUNT_DB2=$(docker exec ${{ job.services.postgres2.id }} psql -U postgres -t -c "SELECT COUNT(*) FROM A;")
-#          echo "Row count in Database 2: $ROW_COUNT_DB2"
-#
-#          if [ "$ROW_COUNT_DB1" -eq "$ROW_COUNT_DB2" ]; then
-#            echo "Row counts are equal. Migration successful."
-#          else
-#            echo "Row counts are not equal. Migration failed."
-#            exit 1
-#          fi
+
+      - name: Run Migra migration script
+        run: psql postgresql://postgres:your_password@localhost:5433/postgres -1 -f migration_script.sql
+
+      - name: Verify Migration Result
+        run: |
+          echo "Checking row count in Database 1"
+          ROW_COUNT_DB1=$(docker exec ${{ job.services.postgres1.id }} psql -U postgres -t -c "SELECT COUNT(*) FROM A;")
+          echo "Row count in Database 1: $ROW_COUNT_DB1"
+
+          echo "Checking row count in Database 2"
+          ROW_COUNT_DB2=$(docker exec ${{ job.services.postgres2.id }} psql -U postgres -t -c "SELECT COUNT(*) FROM A;")
+          echo "Row count in Database 2: $ROW_COUNT_DB2"
+
+          if [ "$ROW_COUNT_DB1" -eq "$ROW_COUNT_DB2" ]; then
+            echo "Row counts are equal. Migration successful."
+          else
+            echo "Row counts are not equal. Migration failed."
+            exit 1
+          fi
