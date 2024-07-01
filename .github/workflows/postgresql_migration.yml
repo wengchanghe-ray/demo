@@ -49,4 +49,4 @@ jobs:
         run: pip install migra[pg]
 
       - name: Run Migra migration
-        run: migra --unsafe --verbose postgresql://postgres:your_password@localhost:5432/postgres postgresql://postgres:your_password@localhost:5433/postgres
+        run: migra --unsafe postgresql://postgres:your_password@localhost:5432/postgres postgresql://postgres:your_password@localhost:5433/postgres
