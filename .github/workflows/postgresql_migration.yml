@@ -39,20 +39,14 @@ jobs:
 
       - name: Execute script1.ddl on PostgreSQL1
         run: |
-          PGPASSWORD=your_password psql -h localhost -U postgres -d postgres -p 5432 -c "create table A (id integer, name integer)"
+          PGPASSWORD=your_password psql -h localhost -U postgres -d postgres -p 5432 -c "create table A (id integer, name varchar(20))"
 
       - name: Execute script2.ddl on PostgreSQL2
         run: |
-          PGPASSWORD=your_password psql -h localhost -U postgres -d postgres -p 5433 -c "create table A (id integer)"
+          PGPASSWORD=your_password psql -h localhost -U postgres -d postgres -p 5433 -c "create table A (id integer, name varchar(40))"
 
       - name: Install Migra
         run: pip install migra[pg]
 
       - name: Run Migra migration
-        run: migra --unsafe postgresql://postgres:your_password@localhost:5432/postgres postgresql://postgres:your_password@localhost:5433/postgres
-#
-#  run_migration:
-#    needs: setup_databases
-#    runs-on: ubuntu-latest
-#
-#    steps:
+        run: migra --unsafe --verbose postgresql://postgres:your_password@localhost:5432/postgres postgresql://postgres:your_password@localhost:5433/postgres
