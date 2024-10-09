@@ -41,11 +41,12 @@ jobs:
       - name: Create Git tag
         id: tag_step
         run: |
+          echo ${{secrets.GITHUB_TOKEN}}
           COMMIT_HASH=$(git rev-parse --short HEAD)
           TAG_NAME="v1.0.${COMMIT_HASH}"
           git tag $TAG_NAME
           git push origin $TAG_NAME
           
-          echo ${{secrets.GITHUB_TOKEN}}
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
