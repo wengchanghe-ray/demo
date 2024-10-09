@@ -32,3 +32,18 @@ jobs:
 
       - name: Package the application
         run: mvn package
+
+      - name: Create Git tag
+        id: tag_step
+        run: |
+          # 获取当前的提交哈希
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          # 定义标签的名称，可以自定义
+          TAG_NAME="v1.0.${COMMIT_HASH}"
+          # 创建标签
+          git tag $TAG_NAME
+          # 推送标签到远程仓库
+          git push origin $TAG_NAME
+
+      - name: Output tag
+        run: echo "Tag ${{ steps.tag_step.outputs.tag_name }} created and pushed."
