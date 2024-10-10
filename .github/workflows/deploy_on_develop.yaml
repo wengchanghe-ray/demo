@@ -1,4 +1,4 @@
-name: Deploy logic on Master
+name: Deploy logic on develop
 
 on:
   push:
