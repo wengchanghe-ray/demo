@@ -1,0 +1,24 @@
+name: Deploy logic on Master
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy-uat:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy DEV
+        run: |
+          echo "Here is deploying DEV!"
+
+  deploy-prod:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy QA
+        run: |
+          echo "Here is deploying QA!"
+  
