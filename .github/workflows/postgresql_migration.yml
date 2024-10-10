@@ -1,40 +1,39 @@
-name: Java Maven Workflow
+name: Deploy with Tags
 
 on:
-  # 手动触发 workflow，允许选择环境
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Select environment to deploy'  # 部署时选择环境
-        required: true
-        default: 'UAT'
-        type: choice
-        options:
-          - UAT
-          - PROD
 
 jobs:
-  build:
+  get_tags:
     runs-on: ubuntu-latest
+    outputs:
+      tags: ${{ steps.get_tags.outputs.tags }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Fetch all tags
+        run: git fetch --tags
+
+      - name: Get the 5 most recent tags
+        id: get_tags
+        run: |
+          TAGS=$(git tag --sort=-creatordate | head -n 5)
+          echo "tags=$TAGS" >> $GITHUB_ENV
+          echo "::set-output name=tags::$TAGS"
 
   deploy:
-    needs: build
+    needs: get_tags
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up deployment environment
+      - name: Deploy code for the selected tag
         run: |
-          if [ "${{ github.event.inputs.environment }}" == "UAT" ]; then
-            echo "Deploying to UAT environment"
-            # 在这里添加 UAT 环境的部署逻辑
-          elif [ "${{ github.event.inputs.environment }}" == "PROD" ]; then
-            echo "Deploying to PROD environment"
-            # 在这里添加 PROD 环境的部署逻辑
-          fi
+          echo "Available tags: ${{ needs.get_tags.outputs.tags }}"
+          echo "Deploying tag: ${{ github.event.inputs.tag }}"
+          git checkout ${{ github.event.inputs.tag }}
+          # 这里执行具体的部署命令
