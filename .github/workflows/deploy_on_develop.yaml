@@ -35,7 +35,8 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Determine environment
-        run: echo "Selected environment: ${{ github.event.inputs.environment }}"
+        run: |
+          echo "Selected environment: ${{ github.event.inputs.environment }}"
 
       - name: Deploy to UAT
         if: ${{ github.event.inputs.environment == 'UAT' }}  # 如果选择了 UAT 环境
