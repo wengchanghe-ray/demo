@@ -47,3 +47,7 @@ jobs:
         id: display_github_output
         run: |
           echo '${{ steps.display_customized_env.outputs.test }}'
+
+      - name: display_github_github_output
+        run: |
+          echo '${{ toJSON(GITHUB_OUTPUT)}}'
