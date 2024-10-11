@@ -48,6 +48,6 @@ jobs:
         run: |
           echo '${{ steps.display_customized_env.outputs.test }}'
 
-      - name: display_github_github_output
+      - name: display_github_DEF_ENV_VARIABLES
         run: |
-          echo '${{ toJSON(GITHUB_OUTPUT)}}'
+          echo '${ GITHUB_WORKFLOW }'
