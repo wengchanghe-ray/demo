@@ -1,24 +1,49 @@
-name: Deploy logic on develop
+#name: Deploy logic on develop
+#
+#on:
+#  push:
+#    branches:
+#      - develop
+#
+#jobs:
+#  deploy-uat:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Deploy DEV
+#        run: |
+#          echo "Here is deploying DEV!"
+#
+#  deploy-prod:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Deploy QA
+#        run: |
+#          echo "Here is deploying QA!"
+#
+
+name: Display env variables
 
 on:
-  push:
-    branches:
-      - develop
+  push
 
 jobs:
-  deploy-uat:
+  display:
     runs-on: ubuntu-latest
-
+    env:
+      TEST_ENV: MY_MAC_AIRs
     steps:
-      - name: Deploy DEV
+      - name: display_customized_env
+        id: display_customized_env
         run: |
-          echo "Here is deploying DEV!"
-
-  deploy-prod:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Deploy QA
+          echo '${ TEST_ENV }'
+          echo "test=hello" >> "$GITHUB_OUTPUT"
+      - name: display_github_env
+        id: display_github_env
         run: |
-          echo "Here is deploying QA!"
-  
+          echo '${{ toJSON(github)}}'
+      - name: display_github_output
+        id: display_github_output
+        run: |
+          echo '${{ steps.display_customized_env.outputs.test }}'
