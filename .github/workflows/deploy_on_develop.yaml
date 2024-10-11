@@ -50,4 +50,4 @@ jobs:
 
       - name: display_github_DEF_ENV_VARIABLES
         run: |
-          echo '${ GITHUB_WORKFLOW }'
+          echo '$GITHUB_WORKFLOW'
