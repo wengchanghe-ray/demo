@@ -38,6 +38,7 @@ jobs:
         id: display_customized_env
         run: |
           echo '${{ env.TEST_ENV }}'
+          echo "again, show: $TEST_ENV"
           echo "test=hello" >> "$GITHUB_OUTPUT"
       - name: display_github_env
         id: display_github_env
