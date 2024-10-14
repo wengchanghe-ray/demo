@@ -4,17 +4,15 @@ on:
   push:
     branches:
       - develop  # 监听 develop 分支的 push 事件
-      - master   # 监听 master 分支的 push 事件
   workflow_dispatch:  # 允许手动触发工作流
     inputs:
       environment:  # 针对 master 分支定义输入参数选择部署环境
         description: 'Select the deployment environment'
         required: true
-        default: 'UAT'
+        default: 'DEV'
         type: choice
         options:
-          - UAT
-          - PROD
+          - DEV
 
 jobs:
   deploy_DEV:
