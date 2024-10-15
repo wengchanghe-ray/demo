@@ -1,0 +1,58 @@
+name: Auto Tagging with Date
+
+on:
+  push:
+    branches:
+      - master  # 在推送到 main 分支时触发工作流
+
+jobs:
+  tag_commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Fetch all tags
+        run: git fetch --tags
+
+      - name: Generate today's date-based tag
+        id: get_tag
+        run: |
+          # 获取当天日期，格式为 vYYYYMMDD
+          date_tag=$(date +v%Y%m%d)
+
+          # 获取已有的带当天日期的标签并找出最大后缀
+          existing_tags=$(git tag --list "$date_tag*")
+          echo "Existing tags: $existing_tags"
+
+          if [ -z "$existing_tags" ]; then
+            # 如果没有当天日期的标签，则从 vYYYYMMDD 开始
+            new_tag="$date_tag"
+          else
+            # 找出已有标签的最大后缀
+            max_suffix=$(echo "$existing_tags" | grep -Eo '_[0-9]+' | sed 's/_//' | sort -nr | head -n 1)
+          
+            if [ -z "$max_suffix" ]; then
+              # 如果没有后缀的标签，后缀从 1 开始
+              new_tag="${date_tag}_1"
+            else
+              # 递增最大后缀
+              new_suffix=$((max_suffix + 1))
+              new_tag="${date_tag}_$new_suffix"
+            fi
+          fi
+
+          echo "New tag: $new_tag"
+          echo "::set-output name=tag::$new_tag"
+
+      - name: Create new tag
+        run: |
+          new_tag=${{ steps.get_tag.outputs.tag }}
+          git tag $new_tag
+          echo "Created tag $new_tag"
+
+      - name: Push new tag to GitHub
+        run: |
+          new_tag=${{ steps.get_tag.outputs.tag }}
+          git push origin $new_tag
