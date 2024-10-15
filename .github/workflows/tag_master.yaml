@@ -59,3 +59,9 @@ jobs:
           git push origin $new_tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GitHub Token 进行认证
+
+
+      - name: echo helloworld
+        run: |
+          echo "Hello, World!"
+
