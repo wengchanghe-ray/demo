@@ -4,7 +4,8 @@ on:
   push:
     branches:
       - master  # 在推送到 main 分支时触发工作流
-
+permissions:
+  contents: write  # 确保内容权限是 write，允许推送到仓库
 jobs:
   tag_commit:
     runs-on: ubuntu-latest
@@ -56,3 +57,5 @@ jobs:
         run: |
           new_tag=${{ steps.get_tag.outputs.tag }}
           git push origin $new_tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GitHub Token 进行认证
