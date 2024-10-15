@@ -53,7 +53,7 @@ jobs:
           git tag $new_tag
           echo "Created tag $new_tag"
 
-      - name: Push new tag to GitHub
+      - name: Push new tag to GitHub1
         run: |
           new_tag=${{ steps.get_tag.outputs.tag }}
           git push origin $new_tag
