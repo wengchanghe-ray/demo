@@ -27,7 +27,7 @@ jobs:
 
       - name: Show changed files
         run: |
-          for file in $${{ steps.changed-files.outputs.modified }}; do
+          for file in ${{ steps.changed-files.outputs.modified }}; do
             if [[ -f "$file" ]]; then
               echo "File found: $file"
             fi
