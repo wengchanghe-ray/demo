@@ -30,7 +30,8 @@ jobs:
           for file in $${{ steps.changed-files.outputs.modified }}; do
             if [[ -f "$file" ]]; then
               echo "File found: $file"
-
+            fi
+          done
 
 #  deploy_master:
 #    runs-on: ubuntu-latest
