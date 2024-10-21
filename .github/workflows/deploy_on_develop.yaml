@@ -19,15 +19,12 @@ jobs:
 
       - name: Filter changed files
         id: changed-files
-        uses: dorny/paths-filter@v2
-        with:
-          filters: |
-            modified:
-              - 'src/**'
+        uses: tj-actions/changed-file@v45.0.2
+
 
       - name: Show changed files
         run: |
-          for file in ${{ steps.changed-files.outputs.modified }}; do
+          for file in ${{ steps.changed-files.outputs.modified_files }}; do
             if [[ -f "$file" ]]; then
               echo "File found: $file"
             fi
