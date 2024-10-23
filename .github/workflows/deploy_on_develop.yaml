@@ -1,45 +1,50 @@
-name: Deploy Workflow
+name: Deploy Workflow123
 
 on:
   push:
     branches:
       - develop  # 监听 develop 分支的 push 事件
+    paths:
+      - src/**
   workflow_dispatch:  # 允许手动触发工作流
-    inputs:
-      environment:  # 针对 master 分支定义输入参数选择部署环境
-        description: 'Select the deployment environment'
-        required: true
-        default: 'DEV'
-        type: choice
-        options:
-          - DEV
+
 
 jobs:
   deploy_DEV:
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/develop' }}  # 只在 develop 分支上执行
+    #    if: ${{ github.ref == 'refs/heads/develop' }}  # 只在 develop 分支上执行
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Deploy to DEV environment
-        run: echo "Deploying to DEV environment..."
+      - name: Filter changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v45.0.2
 
-  deploy_master:
-    runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/master' }}  # 只在 master 分支上执行
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
 
-      - name: Determine environment
+      - name: Show changed files
         run: |
-          echo "Selected environment: ${{ github.event.inputs.environment }}"
+          for file in ${{ steps.changed-files.outputs.modified_files }}; do
+            if [[ -f "$file" ]]; then
+              echo "File found: $file"
+            fi
+          done
 
-      - name: Deploy to UAT
-        if: ${{ github.event.inputs.environment == 'UAT' }}  # 如果选择了 UAT 环境
-        run: echo "Deploying to UAT environment..."
-
-      - name: Deploy to PROD
-        if: ${{ github.event.inputs.environment == 'PROD' }}  # 如果选择了 PROD 环境
-        run: echo "Deploying to PROD environment..."
+#  deploy_master:
+#    runs-on: ubuntu-latest
+#    if: ${{ github.ref == 'refs/heads/master' }}  # 只在 master 分支上执行
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#
+#      - name: Determine environment
+#        run: |
+#          echo "Selected environment: ${{ github.event.inputs.environment }}"
+#
+#      - name: Deploy to UAT
+#        if: ${{ github.event.inputs.environment == 'UAT' }}  # 如果选择了 UAT 环境
+#        run: echo "Deploying to UAT environment..."
+#
+#      - name: Deploy to PROD
+#        if: ${{ github.event.inputs.environment == 'PROD' }}  # 如果选择了 PROD 环境
+#        run: echo "Deploying to PROD environment..."
