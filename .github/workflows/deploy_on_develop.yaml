@@ -1,5 +1,5 @@
 name: Deploy Workflow123
-run-name: deploy ($DEPLOY_ENV)
+run-name: deploy (${{env.DEPLOY_ENV}})
 on:
   push:
     branches:
@@ -22,7 +22,7 @@ env:
 
 jobs:
   deploy_DEV:
-    name: "Deploy ${DEPLOY_ENV}"
+    name: "Deploy ${{env.DEPLOY_ENV}}"
     runs-on: ubuntu-latest
 
     steps:
