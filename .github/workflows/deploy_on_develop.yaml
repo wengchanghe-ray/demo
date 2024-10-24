@@ -1,11 +1,11 @@
 name: Deploy Workflow123
-run-name: deploy (${{env.DEPLOY_ENV}})
+run-name: deploy (${{ github.event.inputs.environments || 'dev' }})
 on:
   push:
     branches:
       - develop  # 监听 develop 分支的 push 事件
-#    paths:
-#      - src/**
+    paths:
+      - src/**
   workflow_dispatch:  # 允许手动触发工作流
     inputs:
       environment:  # 定义输入参数选择部署环境
@@ -22,7 +22,7 @@ env:
 
 jobs:
   deploy_DEV:
-    name: "Deploy ${{env.DEPLOY_ENV}}"
+    name: "Deploy ${{ env.DEPLOY_ENV }}"
     runs-on: ubuntu-latest
 
     steps:
