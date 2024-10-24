@@ -20,7 +20,7 @@ env:
 
 jobs:
   deploy_DEV:
-    name: "Deploy ${{ env.DEPLOY_ENV }}"
+    name: "Deploy ${{ github.event.inputs.environments || 'dev' }}"
     runs-on: ubuntu-latest
 
     steps:
@@ -38,6 +38,11 @@ jobs:
               echo "File found: $file"
             fi
           done
+      - name: debug
+        run: |
+          echo "1."${{env.DEPLOY_ENV}}
+          echo "2."${DEPLOY_ENV}
+          echo "3."$DEPLOY_ENV
 
 #  deploy_master:
 #    runs-on: ubuntu-latest
