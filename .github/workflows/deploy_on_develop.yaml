@@ -1,18 +1,28 @@
 name: Deploy Workflow123
-
+run-name: deploy (${{ github.event.inputs.environments || 'dev' }})
 on:
   push:
     branches:
       - develop  # 监听 develop 分支的 push 事件
-    paths:
-      - src/**
   workflow_dispatch:  # 允许手动触发工作流
+    inputs:
+      environment:  # 定义输入参数选择部署环境
+        description: 'Select the deployment environment'
+        required: true
+        default: 'UAT'
+        type: choice
+        options:
+          - UAT
+          - PROD
 
+env:
+  DEPLOY_ENV: ${{ github.event.inputs.environments || 'dev' }}  # 抽取成全局环境变量
 
 jobs:
   deploy_DEV:
+    name: "Deploy ${{ github.event.inputs.environments || 'dev' }}"
     runs-on: ubuntu-latest
-    #    if: ${{ github.ref == 'refs/heads/develop' }}  # 只在 develop 分支上执行
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -21,7 +31,6 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v45.0.2
 
-
       - name: Show changed files
         run: |
           for file in ${{ steps.changed-files.outputs.modified_files }}; do
@@ -29,6 +38,11 @@ jobs:
               echo "File found: $file"
             fi
           done
+      - name: debug
+        run: |
+          echo "1."${{env.DEPLOY_ENV}}
+          echo "2."${DEPLOY_ENV}
+          echo "3."$DEPLOY_ENV
 
 #  deploy_master:
 #    runs-on: ubuntu-latest
@@ -39,12 +53,12 @@ jobs:
 #
 #      - name: Determine environment
 #        run: |
-#          echo "Selected environment: ${{ github.event.inputs.environment }}"
+#          echo "Selected environment: ${{ env.DEPLOY_ENV }}"
 #
 #      - name: Deploy to UAT
-#        if: ${{ github.event.inputs.environment == 'UAT' }}  # 如果选择了 UAT 环境
+#        if: ${{ env.DEPLOY_ENV == 'UAT' }}  # 如果选择了 UAT 环境
 #        run: echo "Deploying to UAT environment..."
 #
 #      - name: Deploy to PROD
-#        if: ${{ github.event.inputs.environment == 'PROD' }}  # 如果选择了 PROD 环境
+#        if: ${{ env.DEPLOY_ENV == 'PROD' }}  # 如果选择了 PROD 环境
 #        run: echo "Deploying to PROD environment..."
