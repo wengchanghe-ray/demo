@@ -1,30 +1,24 @@
-name: Deploy logic on Master
+name: Monitor Master and Tags
 
 on:
-  workflow_dispatch:  # 允许手动触发工作流
-    inputs:
-      environment:  # 针对 master 分支定义输入参数选择部署环境
-        description: 'Select the deployment environment'
-        required: true
-        default: 'UAT'
-        type: choice
-        options:
-          - UAT
-          - PROD
+  push:
+    branches:
+      - master  # Trigger on pushes to the master branch
+    tags:
+      - 'v*'    # Trigger on tags that start with "v"
+
 jobs:
-  deploy-uat:
+  monitor:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy UAT
-        run: |
-          echo "Here is deploying UAT!"
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  deploy-prod:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Deploy Prod
+      - name: Display Event Info
         run: |
-          echo "Here is deploying PROD!"
-  
+          if [[ "${GITHUB_REF}" == refs/heads/master ]]; then
+            echo "Push detected on master branch."
+          elif [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            echo "Tag with 'v' prefix detected: ${GITHUB_REF}"
+          fi
