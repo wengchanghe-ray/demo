@@ -1,6 +1,12 @@
 name: Deploy logic on Master
 
 on:
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*'
+      
   workflow_dispatch:  # 允许手动触发工作流
     inputs:
       environment:  # 针对 master 分支定义输入参数选择部署环境
@@ -13,6 +19,10 @@ on:
           - PROD
 jobs:
   deploy-uat:
+    if: |
+      github.ref == 'refs/heads/master' ||
+      startsWith(github.ref, 'refs/tags/v')
+      
     runs-on: ubuntu-latest
 
     steps:
@@ -20,11 +30,4 @@ jobs:
         run: |
           echo "Here is deploying UAT!"
 
-  deploy-prod:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Deploy Prod
-        run: |
-          echo "Here is deploying PROD!"
   
