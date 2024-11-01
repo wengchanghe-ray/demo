@@ -6,6 +6,10 @@ on:
       - master  # Trigger on pushes to the master branch
     tags:
       - 'v*'    # Trigger on tags that start with "v"
+  workflow_run:
+    workflows: [ "Release (tag)" ]
+    types:
+      - completed
 
 jobs:
   monitor:
