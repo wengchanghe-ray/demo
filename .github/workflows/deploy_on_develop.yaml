@@ -1,9 +1,11 @@
 name: Deploy Workflow123
-run-name: deploy (${{ github.event.inputs.environments || 'dev' }})
+run-name: deploy ($DEPLOY_ENV)
 on:
   push:
     branches:
       - develop  # 监听 develop 分支的 push 事件
+    paths:
+      - src/**
   workflow_dispatch:  # 允许手动触发工作流
     inputs:
       environment:  # 定义输入参数选择部署环境
@@ -20,7 +22,7 @@ env:
 
 jobs:
   deploy_DEV:
-    name: "Deploy ${{ github.event.inputs.environments || 'dev' }}"
+    name: "Deploy ${DEPLOY_ENV}"
     runs-on: ubuntu-latest
 
     steps:
@@ -38,11 +40,6 @@ jobs:
               echo "File found: $file"
             fi
           done
-      - name: debug
-        run: |
-          echo "1."${{env.DEPLOY_ENV}}
-          echo "2."${DEPLOY_ENV}
-          echo "3."$DEPLOY_ENV
 
 #  deploy_master:
 #    runs-on: ubuntu-latest
