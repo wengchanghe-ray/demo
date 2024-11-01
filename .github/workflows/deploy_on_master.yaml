@@ -11,6 +11,10 @@ on:
         options:
           - UAT
           - PROD
+  workflow_run:
+      workflow: ["Release (tag)"]
+      types:
+        - completed
 jobs:
   deploy-uat:
     runs-on: ubuntu-latest
